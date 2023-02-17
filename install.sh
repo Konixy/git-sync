@@ -20,6 +20,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
   echo "Mac OS X detected"
 
   if command -v brew >/dev/null 2>&1; then
+    echo "Installing shc with brew"
     brew install shc
   else
     echo "Please install brew"
@@ -32,23 +33,25 @@ fi
 
 git clone "https://github.com/Konixy/git-sync"
 
-mkdir -p /bin
+INSTALL_DIRECTORY="/bin"
+
+mkdir -p $INSTALL_DIRECTORY
 
 shc -f ./git-sync/git-sync.sh
 
-cp ./git-sync/git-sync.sh.x /bin/git-sync
+cp ./git-sync/git-sync.sh.x $INSTALL_DIRECTORY/git-sync
 
-chmod +x /bin/git-sync
+chmod +x $INSTALL_DIRECTORY/git-sync
 
 shc -f ./git-sync/git-remove-branch.sh
 
-cp ./git-sync/git-remove-branch.sh.x /bin/git-remove-branch
+cp ./git-sync/git-remove-branch.sh.x $INSTALL_DIRECTORY/git-remove-branch
 
-chmod +x /bin/git-remove-branch
+chmod +x $INSTALL_DIRECTORY/git-remove-branch
 
 rm -rf git-sync
 
-export PATH="$PATH:$HOME/bin"
+export PATH="$PATH:$HOME$INSTALL_DIRECTORY"
 
 # # shellcheck source=~/.bashrc
 # . ~/.bashrc
