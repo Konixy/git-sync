@@ -22,7 +22,7 @@ while getopts "pnhb:-:" opt; do
       ;;
     h)
       usage
-      exit 1
+      exit 0
       ;;
     -)
       case $OPTARG in
