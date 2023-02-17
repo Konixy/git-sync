@@ -129,7 +129,7 @@ main() {
 
   CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
-  if [ "$(git status --porcelain)" ]; then
+  if [ $(git status --porcelain) ]; then
     CHANGES=1
   else
     CHANGES=0
