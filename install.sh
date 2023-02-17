@@ -1,18 +1,34 @@
 #!/bin/sh
 
-sudo apt install shc
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+  echo "Linux detected"
 
-mkdir -p /root/shc
+  sudo apt install shc
 
-cd /root/shc || exit
+  mkdir -p /root/shc
 
-wget http://www.datsi.fi.upm.es/~frosal/sources/shc-3.8.9.tgz
+  cd /root/shc || exit
 
-tar xzf shc-3.8.9.tgz
+  wget http://www.datsi.fi.upm.es/~frosal/sources/shc-3.8.9.tgz
 
-cd shc-3.8.9 || exit
+  tar xzf shc-3.8.9.tgz
 
-make install
+  cd shc-3.8.9 || exit
+
+  make install
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  echo "Mac OS X detected"
+
+  if command -v brew >/dev/null 2>&1; then
+    brew install shc
+  else
+    echo "Please install brew"
+    exit 1
+  fi
+else
+  echo "Unknown operating system: $OSTYPE"
+  exit 1
+fi
 
 git clone "https://github.com/Konixy/git-sync"
 

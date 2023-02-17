@@ -4,7 +4,7 @@ REM Check if sh is installed
 where sh >nul 2>&1
 if %errorlevel% == 1 (
     echo sh is not installed.
-    echo here is a documentation to install sh: https://korben.info/installer-shell-bash-linux-windows-10.html
+    echo here is a documentation to install bash and sh: https://korben.info/installer-shell-bash-linux-windows-10.html
     goto end
 )
 
