@@ -71,6 +71,42 @@ request_commit_message()
   fi
 }
 
+error_fixing() {
+  echo "Choose an option between the following options:
+
+  0: Commit your changes before moving branch
+  1: Create a new branch
+  2: Abort.
+
+  "
+  read RESPONSE
+
+  if [ -z "$RESPONSE" ]; then
+    echo "Invalid response, retry"
+    error_fixing
+  fi
+
+  if [ "$RESPONSE" = "0" ]; then
+    echo "Commiting..."
+    request_commit_message
+    git add -A && git commit -m "$COMMIT_MESSAGE"
+  elif [ "$RESPONSE" = "1" ]; then
+    echo "Creating new branch $BRANCH..."
+    git checkout -b $BRANCH
+    if [ $? -ne 0 ]; then
+      echo "Failed to create branch named $BRANCH"
+      exit 1
+    fi
+    echo "Successfully created and moved to $BRANCH"
+  elif [ "$RESPONSE" = "2" ]; then
+    echo "Aborting."
+    return 1
+  else
+    echo "Invalid response, retry"
+    error_fixing
+  fi
+}
+
 push_changes()
 {
   if [ -z "$BRANCH_OPT" ]
@@ -90,21 +126,7 @@ push_changes()
     git checkout $BRANCH > ./git-sync.log.txt
     if [ $? -ne 0 ]; then
       errors "Failed to move in branch $BRANCH"
-      echo -n "Would you like to commit your changes before moving branch ? (Y/n): "
-      read RESPONSE
-
-      if [ -z "$RESPONSE" ]; then
-        RESPONSE="y"
-      fi
-
-      if [ "${RESPONSE,,}" = "y" ]; then
-        echo "Commiting..."
-        request_commit_message
-        git add -A && git commit -m "$COMMIT_MESSAGE"
-      else
-        echo "Aborting."
-        return 1
-      fi
+      error_fixing
     fi
   fi
 
