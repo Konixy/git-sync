@@ -31,10 +31,12 @@ if not exist %dest_dir% (
 )
 
 REM Download the files
-curl -# -L %git_sync_url% %git_sync_exe_url% %git_remove_branch_url% %git_remove_branch_exe_url% -o %dest_dir%\git-sync.sh -o %dest_dir%\git-sync.exe -o %dest_dir%\git-remove-branch.sh -o %dest_dir%\git-remove-branch.exe
+"C:\Program Files\Git\mingw64\bin\curl" -# -L %git_sync_url% %git_sync_exe_url% %git_remove_branch_url% %git_remove_branch_exe_url% -o %dest_dir%\git-sync.sh -o %dest_dir%\git-sync.exe -o %dest_dir%\git-remove-branch.sh -o %dest_dir%\git-remove-branch.exe
 
+echo.
+echo Git-Sync successfully installed.
+echo.
 
-echo git-sync successfully installed.
 
 :end
 
