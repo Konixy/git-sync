@@ -31,30 +31,30 @@ else
   exit 1
 fi
 
-git clone "https://github.com/Konixy/git-sync"
+git clone "https://github.com/Konixy/git-sync" git-sync-repo
 
-INSTALL_DIRECTORY="/usr/bin"
+INSTALL_DIRECTORY="$HOME/git-sync/bin"
 
-mkdir -p $INSTALL_DIRECTORY
+mkdir -p "$INSTALL_DIRECTORY"
 
-shc -f ./git-sync/git-sync.sh
+shc -f ./git-sync-repo/git-sync.sh
 
-sudo cp ./git-sync/git-sync.sh.x $INSTALL_DIRECTORY/git-sync
+sudo cp ./git-sync-repo/git-sync.sh.x "$INSTALL_DIRECTORY"/git-sync
 
-chmod +x $INSTALL_DIRECTORY/git-sync
+chmod +x "$INSTALL_DIRECTORY"/git-sync
 
-shc -f ./git-sync/git-remove-branch.sh
+shc -f ./git-sync-repo/git-remove-branch.sh
 
-sudo cp ./git-sync/git-remove-branch.sh.x $INSTALL_DIRECTORY/git-remove-branch
+sudo cp ./git-sync-repo/git-remove-branch.sh.x "$INSTALL_DIRECTORY"/git-remove-branch
 
-chmod +x $INSTALL_DIRECTORY/git-remove-branch
+chmod +x "$INSTALL_DIRECTORY"/git-remove-branch
 
-rm -rf git-sync
+rm -rf git-sync-repo
 
-export PATH="$PATH:$HOME$INSTALL_DIRECTORY"
+export PATH="$PATH:$INSTALL_DIRECTORY"
 
-# # shellcheck source=~/.bashrc
-# . ~/.bashrc
+# shellcheck source=~/.bashrc
+. ~/.bashrc
 
-# # shellcheck source=~/.zshrc
-# . ~/.zshrc
+# shellcheck source=~/.zshrc
+. ~/.zshrc
