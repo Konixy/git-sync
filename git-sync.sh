@@ -118,16 +118,19 @@ push_command() {
 }
 
 main() {
+  CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
   if [ -z "$BRANCH_OPT" ]
   then
     printf "Please choose the branch you want to commit (example: dev, master): "
     read -r BRANCH
+    if [ -z "$BRANCH" ]; then
+      BRANCH="$CURRENT_BRANCH"
+    fi
   else
     BRANCH="$BRANCH_OPT"
     echo "Commiting on branch $BRANCH"
   fi
-
-  CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
   if [ "$(git status --porcelain)" != "" ]; then
     CHANGES=1
@@ -140,9 +143,7 @@ main() {
     exit 0
   fi
 
-  if [ "$BRANCH" = "$CURRENT_BRANCH" ]; then
-    echo "Allready on branch $CURRENT_BRANCH"
-  else
+  if [ "$BRANCH" != "$CURRENT_BRANCH" ]; then
     if ! git checkout "$BRANCH" > ./git-sync.log.txt; then
       errors "Failed to move in branch $BRANCH"
       if ! error_fixing; then
