@@ -2,9 +2,9 @@
 
 git clone "https://github.com/Konixy/git-sync"
 
-mkdir -p ~/bin
+mkdir -p /bin
 
-cp ./git-sync/git-sync.sh ~/bin/
+cp ./git-sync/git-sync.sh /bin/
 
 chmod +x /bin/git-sync.sh
 
