@@ -9,7 +9,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 
   cd /root/shc || exit
 
-  wget http://www.datsi.fi.upm.es/~frosal/sources/shc-3.8.9.tgz
+  curl http://www.datsi.fi.upm.es/~frosal/sources/shc-3.8.9.tgz
 
   tar xzf shc-3.8.9.tgz
 
