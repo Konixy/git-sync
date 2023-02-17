@@ -8,7 +8,7 @@ cp ./git-sync/git-sync.sh /bin/
 
 chmod +x /bin/git-sync.sh
 
-cp ./git-sync/git-remove-branch.sh ~/bin/
+cp ./git-sync/git-remove-branch.sh /bin/
 
 rm -rf git-sync
 
