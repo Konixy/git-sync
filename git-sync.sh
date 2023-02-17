@@ -165,7 +165,7 @@ main() {
       PUSH_RESPONSE="y"
     fi
 
-    if [ "${PUSH_RESPONSE,,}" = "y" ]; then
+    if [ "$PUSH_RESPONSE" = "y" ] || [ "$PUSH_RESPONSE" = "Y" ]; then
       echo "Pushing..."
       if ! push_command; then
         echo "Failed to push"
