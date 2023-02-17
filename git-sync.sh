@@ -1,10 +1,12 @@
 #!/bin/sh
 
 # color support
-bold=`echo -en "\e[1m"`; underline=`echo -en "\e[4m"`; dim=`echo -en "\e[2m"`; strickthrough=`echo -en "\e[9m"`; blink=`echo -en "\e[5m"`; reverse=`echo -en "\e[7m"`; hidden=`echo -en "\e[8m"`; normal=`echo -en "\e[0m"`; black=`echo -en "\e[30m"`; red=`echo -en "\e[31m"`; green=`echo -en "\e[32m"`; orange=`echo -en "\e[33m"`; blue=`echo -en "\e[34m"`; purple=`echo -en "\e[35m"`; aqua=`echo -en "\e[36m"`; gray=`echo -en "\e[37m"`; darkgray=`echo -en "\e[90m"`; lightred=`echo -en "\e[91m"`; lightgreen=`echo -en "\e[92m"`; lightyellow=`echo -en "\e[93m"`; lightblue=`echo -en "\e[94m"`; lightpurple=`echo -en "\e[95m"`; lightaqua=`echo -en "\e[96m"`; white=`echo -en "\e[97m"`; default=`echo -en "\e[39m"`; BLACK=`echo -en "\e[40m"`; RED=`echo -en "\e[41m"`; GREEN=`echo -en "\e[42m"`; ORANGE=`echo -en "\e[43m"`; BLUE=`echo -en "\e[44m"`; PURPLE=`echo -en "\e[45m"`; AQUA=`echo -en "\e[46m"`; GRAY=`echo -en "\e[47m"`; DARKGRAY=`echo -en "\e[100m"`; LIGHTRED=`echo -en "\e[101m"`; LIGHTGREEN=`echo -en "\e[102m"`; LIGHTYELLOW=`echo -en "\e[103m"`; LIGHTBLUE=`echo -en "\e[104m"`; LIGHTPURPLE=`echo -en "\e[105m"`; LIGHTAQUA=`echo -en "\e[106m"`; WHITE=`echo -en "\e[107m"`; DEFAULT=`echo -en "\e[49m"`;
+#bold=`echo -en "\e[1m"`; underline=`echo -en "\e[4m"`; dim=`echo -en "\e[2m"`; strickthrough=`echo -en "\e[9m"`; blink=`echo -en "\e[5m"`; reverse=`echo -en "\e[7m"`; hidden=`echo -en "\e[8m"`; normal=`echo -en "\e[0m"`; black=`echo -en "\e[30m"`; red=`echo -en "\e[31m"`; green=`echo -en "\e[32m"`; orange=`echo -en "\e[33m"`; blue=`echo -en "\e[34m"`; purple=`echo -en "\e[35m"`; aqua=`echo -en "\e[36m"`; gray=`echo -en "\e[37m"`; darkgray=`echo -en "\e[90m"`; lightred=`echo -en "\e[91m"`; lightgreen=`echo -en "\e[92m"`; lightyellow=`echo -en "\e[93m"`; lightblue=`echo -en "\e[94m"`; lightpurple=`echo -en "\e[95m"`; lightaqua=`echo -en "\e[96m"`; white=`echo -en "\e[97m"`; default=`echo -en "\e[39m"`; BLACK=`echo -en "\e[40m"`; RED=`echo -en "\e[41m"`; GREEN=`echo -en "\e[42m"`; ORANGE=`echo -en "\e[43m"`; BLUE=`echo -en "\e[44m"`; PURPLE=`echo -en "\e[45m"`; AQUA=`echo -en "\e[46m"`; GRAY=`echo -en "\e[47m"`; DARKGRAY=`echo -en "\e[100m"`; LIGHTRED=`echo -en "\e[101m"`; LIGHTGREEN=`echo -en "\e[102m"`; LIGHTYELLOW=`echo -en "\e[103m"`; LIGHTBLUE=`echo -en "\e[104m"`; LIGHTPURPLE=`echo -en "\e[105m"`; LIGHTAQUA=`echo -en "\e[106m"`; WHITE=`echo -en "\e[107m"`; DEFAULT=`echo -en "\e[49m"`;
+
+app_name="git-sync"
 
 usage() {
-  echo "Usage: $0 [-b|--branch branch] [-p|--push] [-n|--no-push]"
+  echo "Usage: $app_name [-b|--branch branch] [-p|--push] [-n|--no-push]"
 }
 
 while getopts "pnhb:-:" opt; do
@@ -18,7 +20,7 @@ while getopts "pnhb:-:" opt; do
     n)
       PUSH="false"
       ;;
-    -h)
+    h)
       usage
       exit 1
       ;;
@@ -46,32 +48,35 @@ while getopts "pnhb:-:" opt; do
   esac
 done
 
-logs() {
-  echo "$lightyellow[LOGS]$normal $@"
-}
+#logs() {
+#  echo "$lightyellow\[LOGS]$normal $*"
+#
 
 errors() {
-  echo "$red[ERR]$normal"
-  echo "$red[ERR]$normal $@"
-  echo "$red[ERR]$normal"
+  red=$(printf "\e[31m")
+  normal=$(printf "\e[0m")
+  
+  echo "$red\[ERR]$normal"
+  echo "$red\[ERR]$normal $*"
+  echo "$red\[ERR]$normal"
 }
 
 # Some noise stuff
 #logs "Cleaning logs..."
-> ./git-sync.log.txt
+true > ./git-sync.log.txt
 #logs "Cleaned logs!"
 
 request_commit_message()
 {
-  echo -n "Please enter your commit message (default: Update): "
-  read COMMIT_MESSAGE
+  printf "Please enter your commit message (default: Update): "
+  read -r COMMIT_MESSAGE
   if [ -z "$COMMIT_MESSAGE" ]; then
     COMMIT_MESSAGE="Update"
   fi
 }
 
 commit() {
-  git add -A && git commit -m \"$1\"
+  git add -A && git commit -m \""$1"\"
 }
 
 error_fixing() {
@@ -80,9 +85,8 @@ error_fixing() {
   0: Commit your changes before moving branch
   1: Create a new branch
   2: Abort.
-
   "
-  read RESPONSE
+  read -r RESPONSE
 
   if [ -z "$RESPONSE" ]; then
     echo "Invalid response, retry"
@@ -92,11 +96,10 @@ error_fixing() {
   if [ "$RESPONSE" = "0" ]; then
     echo "Commiting..."
     request_commit_message
-    commit $COMMIT_MESSAGE
+    commit "$COMMIT_MESSAGE"
   elif [ "$RESPONSE" = "1" ]; then
     echo "Creating new branch $BRANCH..."
-    git checkout -b $BRANCH
-    if [ $? -ne 0 ]; then
+    if ! git checkout -b "$BRANCH"; then
       echo "Failed to create branch named $BRANCH"
       exit 1
     fi
@@ -111,22 +114,22 @@ error_fixing() {
 }
 
 push_command() {
-  git push --set-upstream origin $BRANCH > ./git-sync.log.txt
+  git push --set-upstream origin "$BRANCH" > ./git-sync.log.txt
 }
 
 main() {
   if [ -z "$BRANCH_OPT" ]
   then
-    echo -n "Please choose the branch you want to commit (example: dev, master): "
-    read BRANCH
+    printf "Please choose the branch you want to commit (example: dev, master): "
+    read -r BRANCH
   else
     BRANCH="$BRANCH_OPT"
     echo "Commiting on branch $BRANCH"
   fi
 
-  CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
+  CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
-  if [[ `git status --porcelain` ]]; then
+  if [ "$(git status --porcelain)" ]; then
     CHANGES=1
   else
     CHANGES=0
@@ -138,13 +141,11 @@ main() {
   fi
 
   if [ "$BRANCH" = "$CURRENT_BRANCH" ]; then
-    echo "Allready on branch $CURRENT_BRANCH"
+    echo "Allread -ry on branch $CURRENT_BRANCH"
   else
-    git checkout $BRANCH > ./git-sync.log.txt
-    if [ $? -ne 0 ]; then
+    if ! git checkout "$BRANCH" > ./git-sync.log.txt; then
       errors "Failed to move in branch $BRANCH"
-      error_fixing
-      if [ $? -ne 0 ]; then
+      if ! error_fixing; then
         exit 1
       fi
     fi
@@ -153,11 +154,11 @@ main() {
   request_commit_message
   echo "Commiting and pushing with message: $COMMIT_MESSAGE"
 
-  commit $COMMIT_MESSAGE
+  commit "$COMMIT_MESSAGE"
 
   if [ -z "$PUSH" ]; then
-    echo -n "Would you like to push the changes ? (Y/n): "
-    read PUSH_RESPONSE
+    printf "Would you like to push the changes ? (Y/n): "
+    read -r PUSH_RESPONSE
 
     if [ -z "$PUSH_RESPONSE" ]; then
       PUSH_RESPONSE="y"
@@ -165,13 +166,18 @@ main() {
 
     if [ "${PUSH_RESPONSE,,}" = "y" ]; then
       echo "Pushing..."
-      push_command
+      if ! push_command; then
+        echo "Failed to push"
+        return 1
+      else
+        echo "Successfully pushed changes"
+      fi
     fi
   else
     if [ "$PUSH" = "true" ]; then
       echo "Pushing..."
       push_command
-      if [ $? -ne 0 ]; then
+      if ! push_command; then
         echo "Failed to push"
         return 1
       else
@@ -180,5 +186,10 @@ main() {
     fi
   fi
 }
+
+if ! command -v git >/dev/null 2>&1; then
+  echo "Git is not installed."
+  exit 1
+fi
 
 main
