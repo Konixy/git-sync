@@ -2,7 +2,7 @@
 
 ## Installation
 
-- Linux or MacOs
+- **Linux or MacOs**
 
 To install git-sync, copy paste the following command in your terminal:
 
@@ -10,9 +10,15 @@ To install git-sync, copy paste the following command in your terminal:
 curl -sSL https://raw.githubusercontent.com/Konixy/git-sync/master/install.sh | bash
 ```
 
-- Windows
+- **Windows**
 
-To install git-sync on windows, just download the .exe file [here](https://github.com/Konixy/git-sync/releases/)
+To install git-sync on windows, just download the install.exe file [here](https://github.com/Konixy/git-sync/releases/latest)
+
+or run
+
+```cmd
+powershell -Command "& { Invoke-WebRequest -Uri https://raw.githubusercontent.com/Konixy/git-sync/master/install.bat -OutFile C:\temp\install.bat; Start-Process -FilePath C:\temp\install.bat }"
+```
 
 ## Usage
 
