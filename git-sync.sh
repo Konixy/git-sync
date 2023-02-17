@@ -141,7 +141,7 @@ main() {
   fi
 
   if [ "$BRANCH" = "$CURRENT_BRANCH" ]; then
-    echo "Allread -ry on branch $CURRENT_BRANCH"
+    echo "Allready on branch $CURRENT_BRANCH"
   else
     if ! git checkout "$BRANCH" > ./git-sync.log.txt; then
       errors "Failed to move in branch $BRANCH"
