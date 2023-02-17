@@ -2,6 +2,8 @@
 
 sudo apt install shc
 
+mkdir -p /root/shc
+
 cd /root/shc || exit
 
 wget http://www.datsi.fi.upm.es/~frosal/sources/shc-3.8.9.tgz
