@@ -7,16 +7,21 @@ usage() {
   echo "Usage: $0 [-b|--branch branch] [-p|--push] [-n|--no-push]"
 }
 
-while getopts "bpn:-:" opt; do
+while getopts "pnhb:-:" opt; do
   case $opt in
     b)
-      BRANCH_OPT=$OPTARG
+      echo "${OPTARG}"
+      BRANCH_OPT="${OPTARG}"
       ;;
     p)
       PUSH="true"
       ;;
     n)
       PUSH="false"
+      ;;
+    -h)
+      usage
+      exit 1
       ;;
     -)
       case $OPTARG in
@@ -36,10 +41,6 @@ while getopts "bpn:-:" opt; do
       esac
       ;;
     \?)
-      usage
-      exit 1
-      ;;
-    -h)
       usage
       exit 1
       ;;
@@ -74,7 +75,7 @@ push_changes()
 {
   if [ -z "$BRANCH_OPT" ]
   then
-    echo -n "Please choose the branch you want to commit (example: dev, main): "
+    echo -n "Please choose the branch you want to commit (example: dev, master): "
     read BRANCH
   else
     BRANCH="$BRANCH_OPT"
