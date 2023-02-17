@@ -10,7 +10,6 @@ usage() {
 while getopts "pnhb:-:" opt; do
   case $opt in
     b)
-      echo "${OPTARG}"
       BRANCH_OPT="${OPTARG}"
       ;;
     p)
@@ -26,7 +25,7 @@ while getopts "pnhb:-:" opt; do
     -)
       case $OPTARG in
         branch=*)
-          BRANCH_OPT==${OPTARG#*=}
+          BRANCH_OPT=${OPTARG#*"="}
           ;;
         push)
           PUSH="true"
@@ -115,65 +114,71 @@ push_command() {
   git push --set-upstream origin $BRANCH > ./git-sync.log.txt
 }
 
-
-if [ -z "$BRANCH_OPT" ]
-then
-  echo -n "Please choose the branch you want to commit (example: dev, master): "
-  read BRANCH
-else
-  BRANCH="$BRANCH_OPT"
-  echo "Commiting on branch $BRANCH"
-fi
-
-CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
-
-if [[ `git status --porcelain` ]]; then
-  CHANGES=1
-else
-  CHANGES=0
-fi
-
-if [ "$BRANCH" = "$CURRENT_BRANCH" ] && [ CHANGES = 1 ]; then
-  echo "No changes to commit"
-  exit 0
-fi
-
-if [ "$BRANCH" = "$CURRENT_BRANCH" ]; then
-  echo "Allready on branch $CURRENT_BRANCH"
-else
-  git checkout $BRANCH > ./git-sync.log.txt
-  if [ $? -ne 0 ]; then
-    errors "Failed to move in branch $BRANCH"
-    error_fixing
-  fi
-fi
-
-request_commit_message
-echo "Commiting and pushing with message: $COMMIT_MESSAGE"
-
-commit $COMMIT_MESSAGE
-
-if [ -z "$PUSH" ]; then
-  echo -n "Would you like to push the changes ? (Y/n): "
-  read PUSH_RESPONSE
-
-  if [ -z "$PUSH_RESPONSE" ]; then
-    PUSH_RESPONSE="y"
+main() {
+  if [ -z "$BRANCH_OPT" ]
+  then
+    echo -n "Please choose the branch you want to commit (example: dev, master): "
+    read BRANCH
+  else
+    BRANCH="$BRANCH_OPT"
+    echo "Commiting on branch $BRANCH"
   fi
 
-  if [ "${PUSH_RESPONSE,,}" = "y" ]; then
-    echo "Pushing..."
-    push_command
+  CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
+
+  if [[ `git status --porcelain` ]]; then
+    CHANGES=1
+  else
+    CHANGES=0
   fi
-else
-  if [ "$PUSH" = "true" ]; then
-    echo "Pushing..."
-    push_command
+
+  if [ "$BRANCH" = "$CURRENT_BRANCH" ] && [ $CHANGES = 1 ]; then
+    echo "No changes to commit"
+    exit 0
+  fi
+
+  if [ "$BRANCH" = "$CURRENT_BRANCH" ]; then
+    echo "Allready on branch $CURRENT_BRANCH"
+  else
+    git checkout $BRANCH > ./git-sync.log.txt
     if [ $? -ne 0 ]; then
-      echo "Failed to push"
-      return 1
-    else
-      echo "Successfully pushed changes"
+      errors "Failed to move in branch $BRANCH"
+      error_fixing
+      if [ $? -ne 0 ]; then
+        exit 1
+      fi
     fi
   fi
-fi
+
+  request_commit_message
+  echo "Commiting and pushing with message: $COMMIT_MESSAGE"
+
+  commit $COMMIT_MESSAGE
+
+  if [ -z "$PUSH" ]; then
+    echo -n "Would you like to push the changes ? (Y/n): "
+    read PUSH_RESPONSE
+
+    if [ -z "$PUSH_RESPONSE" ]; then
+      PUSH_RESPONSE="y"
+    fi
+
+    if [ "${PUSH_RESPONSE,,}" = "y" ]; then
+      echo "Pushing..."
+      push_command
+    fi
+  else
+    if [ "$PUSH" = "true" ]; then
+      echo "Pushing..."
+      push_command
+      if [ $? -ne 0 ]; then
+        echo "Failed to push"
+        return 1
+      else
+        echo "Successfully pushed changes"
+      fi
+    fi
+  fi
+}
+
+main
