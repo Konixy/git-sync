@@ -71,6 +71,10 @@ request_commit_message()
   fi
 }
 
+commit() {
+  git add -A && git commit -m \"$1\"
+}
+
 error_fixing() {
   echo "Choose an option between the following options:
 
@@ -89,7 +93,7 @@ error_fixing() {
   if [ "$RESPONSE" = "0" ]; then
     echo "Commiting..."
     request_commit_message
-    git add -A && git commit -m "$COMMIT_MESSAGE"
+    commit $COMMIT_MESSAGE
   elif [ "$RESPONSE" = "1" ]; then
     echo "Creating new branch $BRANCH..."
     git checkout -b $BRANCH
@@ -124,10 +128,14 @@ fi
 CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
 
 if [[ `git status --porcelain` ]]; then
-  push_changes
-  exit 0
+  CHANGES=1
 else
-  echo "There is no changes to commit."
+  CHANGES=0
+fi
+
+if [ "$BRANCH" = "$CURRENT_BRANCH" ] && [ CHANGES = 1 ]; then
+  echo "No changes to commit"
+  exit 0
 fi
 
 if [ "$BRANCH" = "$CURRENT_BRANCH" ]; then
@@ -143,7 +151,7 @@ fi
 request_commit_message
 echo "Commiting and pushing with message: $COMMIT_MESSAGE"
 
-git add -A && git commit -m \""$COMMIT"\"
+commit $COMMIT_MESSAGE
 
 if [ -z "$PUSH" ]; then
   echo -n "Would you like to push the changes ? (Y/n): "
