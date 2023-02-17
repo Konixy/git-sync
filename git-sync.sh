@@ -107,6 +107,10 @@ error_fixing() {
   fi
 }
 
+push_command() {
+  git push --set-upstream origin $BRANCH > ./git-sync.log.txt
+}
+
 push_changes()
 {
   if [ -z "$BRANCH_OPT" ]
@@ -145,12 +149,12 @@ push_changes()
 
     if [ "${PUSH_RESPONSE,,}" = "y" ]; then
       echo "Pushing..."
-      git push
+      push_command
     fi
   else
     if [ "$PUSH" = "true" ]; then
       echo "Pushing..."
-      git push > ./git-sync.log.txt
+      push_command
       if [ $? -ne 0 ]; then
         echo "Failed to push"
         return 1
