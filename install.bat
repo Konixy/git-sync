@@ -37,3 +37,5 @@ curl -# -L %git_sync_url% %git_sync_exe_url% %git_remove_branch_url% %git_remove
 echo git-sync successfully installed.
 
 :end
+
+pause
