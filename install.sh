@@ -1,18 +1,34 @@
 #!/bin/sh
 
+sudo apt install shc
+
+cd /root/shc || exit
+
+wget http://www.datsi.fi.upm.es/~frosal/sources/shc-3.8.9.tgz
+
+tar xzf shc-3.8.9.tgz
+
+cd shc-3.8.9 || exit
+
+make install
+
 git clone "https://github.com/Konixy/git-sync"
 
 mkdir -p /bin
 
-cp ./git-sync/git-sync.sh /bin/
+shc -f ./git-sync/git-sync.sh
 
-chmod +x /bin/git-sync.sh
+cp ./git-sync/git-sync.sh.x /bin/git-sync
 
-cp ./git-sync/git-remove-branch.sh /bin/
+chmod +x /bin/git-sync
+
+shc -f ./git-sync/git-sync.sh
+
+cp ./git-sync/git-remove-branch.sh.x /bin/git-remove-branch
+
+chmod +x /bin/git-remove-branch
 
 rm -rf git-sync
-
-chmod +x /bin/git-remove-branch.sh
 
 export PATH="$PATH:$HOME/bin"
 
