@@ -39,13 +39,13 @@ mkdir -p $INSTALL_DIRECTORY
 
 shc -f ./git-sync/git-sync.sh
 
-cp ./git-sync/git-sync.sh.x $INSTALL_DIRECTORY/git-sync
+sudo cp ./git-sync/git-sync.sh.x $INSTALL_DIRECTORY/git-sync
 
 chmod +x $INSTALL_DIRECTORY/git-sync
 
 shc -f ./git-sync/git-remove-branch.sh
 
-cp ./git-sync/git-remove-branch.sh.x $INSTALL_DIRECTORY/git-remove-branch
+sudo cp ./git-sync/git-remove-branch.sh.x $INSTALL_DIRECTORY/git-remove-branch
 
 chmod +x $INSTALL_DIRECTORY/git-remove-branch
 
