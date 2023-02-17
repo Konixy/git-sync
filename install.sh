@@ -11,7 +11,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 
     cd /root/shc || exit
 
-    curl -o shc.tgz http://www.datsi.fi.upm.es/~frosal/sources/shc-3.8.9.tgz
+    sudo curl -o shc.tgz http://www.datsi.fi.upm.es/~frosal/sources/shc-3.8.9.tgz
 
     tar xzf shc.tgz
 
@@ -39,21 +39,19 @@ fi
 
 git clone "https://github.com/Konixy/git-sync" git-sync-repo
 
-INSTALL_DIRECTORY="$HOME/.local/bin"
-
 mkdir -p "$INSTALL_DIRECTORY"
 
 shc -f ./git-sync-repo/git-sync.sh
 
 sudo cp ./git-sync-repo/git-sync.sh.x "$INSTALL_DIRECTORY"/git-sync
 
-chmod +x "$INSTALL_DIRECTORY"/git-sync
+sudo chmod +x "$INSTALL_DIRECTORY"/git-sync
 
 shc -f ./git-sync-repo/git-remove-branch.sh
 
 sudo cp ./git-sync-repo/git-remove-branch.sh.x "$INSTALL_DIRECTORY"/git-remove-branch
 
-chmod +x "$INSTALL_DIRECTORY"/git-remove-branch
+sudo chmod +x "$INSTALL_DIRECTORY"/git-remove-branch
 
 rm -rf git-sync-repo
 
