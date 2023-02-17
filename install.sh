@@ -24,7 +24,7 @@ cp ./git-sync/git-sync.sh.x /bin/git-sync
 
 chmod +x /bin/git-sync
 
-shc -f ./git-sync/git-sync.sh
+shc -f ./git-sync/git-remove-branch.sh
 
 cp ./git-sync/git-remove-branch.sh.x /bin/git-remove-branch
 
