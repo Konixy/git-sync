@@ -55,10 +55,10 @@ sudo chmod +x "$INSTALL_DIRECTORY"/git-remove-branch
 
 rm -rf git-sync-repo
 
-export PATH="$PATH:$INSTALL_DIRECTORY"
+sh -c sudo export PATH="$PATH:$INSTALL_DIRECTORY"
 
 # shellcheck source=~/.bashrc
-. ~/.bashrc
+. ~/.bashrc >/dev/null
 
 # shellcheck source=~/.zshrc
-. ~/.zshrc
+. ~/.zshrc >/dev/null
