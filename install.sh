@@ -3,21 +3,22 @@
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
   echo "Linux detected"
 
-  sudo apt update --force-yes
-  sudo apt full-ugrade --force-yes
-  sudo apt install --force-yes shc make build-essential git curl
+  if ! which shc >/dev/null; then
+    sudo apt update --allow
+    sudo apt install --allow shc make build-essential git curl
 
-  mkdir -p /root/shc
+    mkdir -p /root/shc
 
-  cd /root/shc || exit
+    cd /root/shc || exit
 
-  curl -o shc.tgz http://www.datsi.fi.upm.es/~frosal/sources/shc-3.8.9.tgz
+    curl -o shc.tgz http://www.datsi.fi.upm.es/~frosal/sources/shc-3.8.9.tgz
 
-  tar xzf shc.tgz
+    tar xzf shc.tgz
 
-  cd shc || exit
+    cd shc || exit
 
-  make install
+    make install
+  fi
 
   INSTALL_DIRECTORY="$HOME/bin"
 elif [[ "$OSTYPE" == "darwin"* ]]; then
