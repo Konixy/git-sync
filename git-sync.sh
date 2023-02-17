@@ -111,63 +111,61 @@ push_command() {
   git push --set-upstream origin $BRANCH > ./git-sync.log.txt
 }
 
-push_changes()
-{
-  if [ -z "$BRANCH_OPT" ]
-  then
-    echo -n "Please choose the branch you want to commit (example: dev, master): "
-    read BRANCH
-  else
-    BRANCH="$BRANCH_OPT"
-    echo "Commiting on branch $BRANCH"
-  fi
 
-  CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
+if [ -z "$BRANCH_OPT" ]
+then
+  echo -n "Please choose the branch you want to commit (example: dev, master): "
+  read BRANCH
+else
+  BRANCH="$BRANCH_OPT"
+  echo "Commiting on branch $BRANCH"
+fi
 
-  if [ "$BRANCH" = "$CURRENT_BRANCH" ]; then
-    echo "Allready on branch $CURRENT_BRANCH"
-  else
-    git checkout $BRANCH > ./git-sync.log.txt
-    if [ $? -ne 0 ]; then
-      errors "Failed to move in branch $BRANCH"
-      error_fixing
-    fi
-  fi
-
-  request_commit_message
-  echo "Commiting and pushing with message: $COMMIT_MESSAGE"
-
-  git add -A && git commit -m \""$COMMIT"\"
-
-  if [ -z "$PUSH" ]; then
-    echo -n "Would you like to push the changes ? (Y/n): "
-    read PUSH_RESPONSE
-
-    if [ -z "$PUSH_RESPONSE" ]; then
-      PUSH_RESPONSE="y"
-    fi
-
-    if [ "${PUSH_RESPONSE,,}" = "y" ]; then
-      echo "Pushing..."
-      push_command
-    fi
-  else
-    if [ "$PUSH" = "true" ]; then
-      echo "Pushing..."
-      push_command
-      if [ $? -ne 0 ]; then
-        echo "Failed to push"
-        return 1
-      else
-        echo "Successfully pushed changes"
-      fi
-    fi
-  fi
-}
+CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
 
 if [[ `git status --porcelain` ]]; then
   push_changes
   exit 0
 else
   echo "There is no changes to commit."
+fi
+
+if [ "$BRANCH" = "$CURRENT_BRANCH" ]; then
+  echo "Allready on branch $CURRENT_BRANCH"
+else
+  git checkout $BRANCH > ./git-sync.log.txt
+  if [ $? -ne 0 ]; then
+    errors "Failed to move in branch $BRANCH"
+    error_fixing
+  fi
+fi
+
+request_commit_message
+echo "Commiting and pushing with message: $COMMIT_MESSAGE"
+
+git add -A && git commit -m \""$COMMIT"\"
+
+if [ -z "$PUSH" ]; then
+  echo -n "Would you like to push the changes ? (Y/n): "
+  read PUSH_RESPONSE
+
+  if [ -z "$PUSH_RESPONSE" ]; then
+    PUSH_RESPONSE="y"
+  fi
+
+  if [ "${PUSH_RESPONSE,,}" = "y" ]; then
+    echo "Pushing..."
+    push_command
+  fi
+else
+  if [ "$PUSH" = "true" ]; then
+    echo "Pushing..."
+    push_command
+    if [ $? -ne 0 ]; then
+      echo "Failed to push"
+      return 1
+    else
+      echo "Successfully pushed changes"
+    fi
+  fi
 fi
