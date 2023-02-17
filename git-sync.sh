@@ -131,13 +131,11 @@ main() {
 
   if [ "$(git status --porcelain)" != "" ]; then
     CHANGES=1
-    echo "changes 1"
   else
     CHANGES=0
-    echo "changes 0"
   fi
 
-  if [ "$BRANCH" = "$CURRENT_BRANCH" ] && [ $CHANGES = 1 ]; then
+  if [ "$BRANCH" = "$CURRENT_BRANCH" ] && [ $CHANGES = 0 ] ; then
     echo "No changes to commit"
     exit 0
   fi
