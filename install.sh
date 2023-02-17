@@ -16,12 +16,15 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
   cd shc-3.8.9 || exit
 
   make install
+
+  INSTALL_DIRECTORY="$HOME/bin"
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   echo "Mac OS X detected"
 
   if command -v brew >/dev/null 2>&1; then
     echo "Installing shc with brew"
     brew install shc
+    INSTALL_DIRECTORY="$HOME/.local/bin"
   else
     echo "Please install brew"
     exit 1
@@ -33,7 +36,7 @@ fi
 
 git clone "https://github.com/Konixy/git-sync" git-sync-repo
 
-INSTALL_DIRECTORY="$HOME/git-sync/bin"
+INSTALL_DIRECTORY="$HOME/.local/bin"
 
 mkdir -p "$INSTALL_DIRECTORY"
 
