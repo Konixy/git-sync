@@ -33,7 +33,7 @@ fi
 
 git clone "https://github.com/Konixy/git-sync"
 
-INSTALL_DIRECTORY="/bin"
+INSTALL_DIRECTORY="/usr/bin"
 
 mkdir -p $INSTALL_DIRECTORY
 
