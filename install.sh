@@ -4,23 +4,19 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
   echo "Linux detected"
 
   if ! which shc >/dev/null; then
-    sudo apt update --allow
-    sudo apt install --allow shc make build-essential git curl
+    sudo apt update -y
+    sudo apt install -y shc make build-essential git curl
 
-    mkdir -p /root/shc
+    sudo mkdir -p /root/shc
 
-    cd /root/shc || exit
+    sudo curl -o /root/shc/shc.tgz http://www.datsi.fi.upm.es/~frosal/sources/shc-3.8.9.tgz
 
-    sudo curl -o shc.tgz http://www.datsi.fi.upm.es/~frosal/sources/shc-3.8.9.tgz
+    sudo tar xzf /root/shc/shc.tgz -C /root/shc/
 
-    tar xzf shc.tgz
-
-    cd shc || exit
-
-    make install
+    make -i /root/shc/shc-3.8.9 install
   fi
 
-  INSTALL_DIRECTORY="$HOME/bin"
+  INSTALL_DIRECTORY="/usr/bin"
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   echo "Mac OS X detected"
 
